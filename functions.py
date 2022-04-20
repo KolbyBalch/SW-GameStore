@@ -61,9 +61,10 @@ def sq(num):
 ## greets them by their entire name
 ## names should be strings
 def greetUser(first, middle, last):
-    print("Hello!")
-    print("Welcome to the program", first, middle, last)
-    print("Glad to have you!")
+     if type(first) == str and type(middle) == str and type(last) == str:
+        print("Hello!")
+        print("Welcome to the program", first, middle, last)
+        print("Glad to have you!")
 
 ## takes in a Python list
 ## attempts to display the item at the index provided
