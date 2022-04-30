@@ -39,15 +39,15 @@ while(loopFlag):
         case 0:
             loopFlag = False
         case 1:
-            currentUser.changeUsername
+            currentUser.changeUsername(cur)
         case 2:
-            currentUser.changePassword
+            currentUser.changePassword(cur)
         case 3:
-            currentUser.updateAddr
+            currentUser.updateAddr(cur)
         case 4:
-            currentUser.updateCard
+            currentUser.updateCard(cur)
         case 5:
-            currentUser.deleteUser
+            currentUser.deleteUser(cur)
             loginFlag = False
 
 cur.close()

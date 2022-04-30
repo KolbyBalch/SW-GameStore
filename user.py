@@ -141,7 +141,7 @@ class User:
             cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "';")
         else:
             print("That is not a valid option, please try again.")
-            updateAddr()
+            self.updateAddr()
 
     def updateCard(self, cursor):
         try:
@@ -168,7 +168,7 @@ class User:
             print("")
         else:
             print("That is not a valid choice, please try again.")
-            deleteUser()
+            self.deleteUser()
 
 
 #username = input("Please enter a username")
