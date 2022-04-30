@@ -1,14 +1,18 @@
 
 def userLogin(cursor):
-    login_username = input("Username: ")
-    cursor.execute("SELECT * FROM gamestoreuser WHERE username LIKE '" + login_username + "'")
-    row = cursor.fetchone()
-    login_password = input("Password: ")
-    if (login_password == row[2]):
-        currentUser = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
-        print("login successful")
-        return currentUser
-    else:
+    try:
+        login_username = input("Username: ")
+        cursor.execute("SELECT * FROM gamestoreuser WHERE username LIKE '" + login_username + "'")
+        row = cursor.fetchone()
+        login_password = input("Password: ")
+        if (login_password == row[2]):
+            currentUser = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7])
+            print("login successful")
+            return currentUser
+        else:
+            return False
+    except:
+        print("Username or Password not recognized. Are you registered with us? ")
         return False
 
 class User:
@@ -40,7 +44,6 @@ class User:
     def register(self, cursor):
 
         cursor.execute("SELECT * FROM gamestoreuser")
-        allrows = cursor.fetchall()
         usernameNotAvailable = True
 
         while(usernameNotAvailable):
@@ -108,7 +111,7 @@ class User:
                 usernameNotAvailable = False
 
         print("Your new username is: " + self.username)
-        cursor.execute("UPDATE gamestoreuser SET username = '" + self.username + "';")
+        cursor.execute("UPDATE gamestoreuser SET username = '" + self.username + "' WHERE userid = " + str(self.userID) + ";")
 
 
 
