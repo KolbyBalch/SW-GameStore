@@ -70,6 +70,7 @@ def main(cur):
                         case "5":
                             currentUser.deleteUser(cur)
                             loginFlag = False
+                    conn.commit()
 
 
 main(cur)
