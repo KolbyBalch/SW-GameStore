@@ -50,9 +50,5 @@ while(loopFlag):
             currentUser.deleteUser
             loginFlag = False
 
-
-
-
-
 cur.close()
 conn.close()
