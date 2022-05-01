@@ -1,5 +1,5 @@
 import psycopg2
-import orderItem as oi
+import cart as c
 import user as u
 
 def doNothing():
@@ -48,7 +48,24 @@ def main(cur):
             case "2": #Filter Products
                 doNothing()
             case "3": #See Current Cart
-                doNothing()
+                c.findItemsinCart(currentUser, cur)
+                
+                cartFlag = True
+                while(cartFlag == True):
+                    print("Available Selections: \n\n0. Go Back \n1. Checkout \n2. Remove Item from Cart \n3. Empty Cart \n")
+                    cartSel = input("Please make a selection: ")
+                    match cartSel:
+                        case "0": #Go Back
+                            cartFlag = False
+                        case "1": #Checkout
+                            doNothing()
+                        case "2": #Remove Item
+                            doNothing()
+                        case "3": #Empty Cart
+                            doNothing()
+                        case _ :  #Not Recognized
+                            print("Selection not Recognized.")
+
             case "4": #See Past Orders
                 doNothing()
             case "5": #Manage Account
@@ -71,6 +88,8 @@ def main(cur):
                             currentUser.deleteUser(cur)
                             loginFlag = False
                     conn.commit()
+            case _ : #Not Recognized
+                print("Selection not Recognized.")
 
 
 main(cur)

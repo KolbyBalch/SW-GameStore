@@ -1,13 +1,22 @@
-import psycopg2
 
+class orderItem:
 
-def findItemsinCart(cartID, cursor):
+    def __init__(self, cursor, cartid, invid):
+        cursor.execute("SELECT orderitemid FROM orderitem ORDER BY orderitemid DESC")
+        highestid = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM orderitem WHERE cartid = " + str(cartID))
+        self.ID = highestid[0] + 1
+        self.cartID = cartid
+        self.invID = invid
+        self.amt = int(input("How many copies would you like? "))
 
-    print("Number of Unique games: ", cursor.rowcount )
+    def updateamt(self, cursor):
+        self.amt = int(input("How many copies would you like? "))
+        cursor.execute("UPDATE orderitem SET amt = " + str(self.amt) + " WHERE orderitemid = " + str(self.ID) + ";")
 
-    row = cursor.fetchone()
-    while row is not None:
-        print(row)
-        row = cursor.fetchone()
+    def delete(self, cursor):
+        cursor.execute("DELETE FROM orderitem WHERE orderitemid = " + str(self.ID) + ";")
+        self.ID = ""
+        self.invID = ""
+        self.invID = ""
+        self.amt = ""
