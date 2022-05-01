@@ -102,7 +102,7 @@ class User:
         usernameNotAvailable = True
 
         while(usernameNotAvailable):
-            new_username = input("Please enter a username.")
+            new_username = input("Please enter a username: ")
             cursor.execute("SELECT * FROM gamestoreuser WHERE username = '" + new_username + "';")
             if(cursor.fetchone() != None):
                 print("Username not available.")
@@ -116,7 +116,7 @@ class User:
 
 
     def changePassword(self, cursor):
-        self.password = input("Please enter a new password")
+        self.password = input("Please enter a new password: ")
 
         print("Your new password is: " + self.password)
         cursor.execute("UPDATE gamestoreuser SET pass = '" + self.password + "';")
@@ -131,16 +131,16 @@ class User:
         choice = input("Please enter your selection:")
 
         if choice == 1:
-            self.shippingAddr = input("Please enter a new shipping address.")
+            self.shippingAddr = input("Please enter a new shipping address: ")
             cursor.execute("UPDATE gamestoreuser SET shippingaddr = '" + self.shippingAddr + "';")
         elif choice == 2:
-            self.billingAddr = input("Please enter a new billing address.")
+            self.billingAddr = input("Please enter a new billing address: ")
             cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "';")
         elif choice == 3:
-            self.shippingAddr = input("Please enter a new shipping address.")
+            self.shippingAddr = input("Please enter a new shipping address: ")
             cursor.execute("UPDATE gamestoreuser SET shippingaddr = '" + self.shippingAddr + "';")
             print("\n")
-            self.billingAddr = input("Please enter a new billing address.")
+            self.billingAddr = input("Please enter a new billing address: ")
             cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "';")
         else:
             print("That is not a valid option, please try again.")
@@ -148,7 +148,7 @@ class User:
 
     def updateCard(self, cursor):
         try:
-            self.cardNum = int(input("Please enter a new card number."))
+            self.cardNum = int(input("Please enter a new card number: "))
         except:
             print("Something went wrong. Make sure that you are inputting only numbers.")
             
