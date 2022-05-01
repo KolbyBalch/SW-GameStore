@@ -1,6 +1,7 @@
 import psycopg2
 import cart as c
 import user as u
+import inventory as i
 
 def doNothing():
     print("")
@@ -14,6 +15,35 @@ conn = psycopg2.connect(
 
 print ("connected to store")
 cur = conn.cursor()
+
+def employeeMenu(cursor):
+    while(True):
+        print("\nEmployee Only Options: \n0. Go Back \n1. Add New Game \n2. Update Game Price \n3. Update Game Name \n4. Update Game Stock \n5. Remove Game")
+        empChoice = input("Please make a selection: ")
+        match empChoice:
+            case "0":
+                return 0
+            case "1": # New Game
+                currentgame = i.Inventory()
+                currentgame.newGame(cur)
+            case "2": # Update Price
+                currentgame = i.getExistingInv(cur)
+                if (currentgame != 0):
+                    currentgame.changeprice(cur)
+            case "3": # Update Name
+                currentgame = i.getExistingInv(cur)
+                if (currentgame != 0):
+                    currentgame.changename(cur)
+            case "4": # Update Stock
+                currentgame = i.getExistingInv(cur)
+                if (currentgame != 0):
+                    currentgame.changeamount(cur)
+            case "5": # Remove Game
+                currentgame = i.getExistingInv(cur)
+                if (currentgame != 0):
+                    currentgame.DeleteGame(cur)
+            case _ : # Default
+                print ("Selection not recognized. \n")
 
 def main(cur):
     loginFlag = False
@@ -37,17 +67,18 @@ def main(cur):
                 print("Goodbye!")
                 return 0
 
-        print("Available Selections: \n\n0. Logout\n1. See Products \n2. Filter Products \n3. See Current Cart \n4. See Past Orders \n5. Manage Account \n")
+        print("Available Selections: \n\n0. Logout\n1. See Products \n2. See Current Cart \n3. See Past Orders \n4. Manage Account \n")
+        if (currentUser.employee == True):
+            print ("9: Manage Inventory (Not visible to non-employees).\n")
         menuchoice = input("Please make a selection: ")
+
         match menuchoice:
             case "0":
                 currentUser = ""
                 loginFlag = False
-            case "1": #See Products
-                doNothing()
-            case "2": #Filter Products
-                doNothing()
-            case "3": #See Current Cart
+            case "1": #See All Products
+                i.printAll(1, cur)
+            case "2": #See Current Cart
                 c.findItemsinCart(currentUser, cur)
                 
                 cartFlag = True
@@ -66,9 +97,9 @@ def main(cur):
                         case _ :  #Not Recognized
                             print("Selection not Recognized.")
 
-            case "4": #See Past Orders
+            case "3": #See Past Orders
                 doNothing()
-            case "5": #Manage Account
+            case "4": #Manage Account
                 accFlag = True
                 while(accFlag):
                     print("Account settings: \n\n0. Go Back \n1. Update Username \n2. Update Password \n3. Update Address \n4. Update Card Information \n5. Delete Account \n")
@@ -88,6 +119,11 @@ def main(cur):
                             currentUser.deleteUser(cur)
                             loginFlag = False
                     conn.commit()
+            case "9":
+                if(currentUser.employee == False):
+                    print("Selection not Recognized.")
+                elif(currentUser.employee == True):
+                    employeeMenu(cur)
             case _ : #Not Recognized
                 print("Selection not Recognized.")
 

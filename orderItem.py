@@ -1,14 +1,16 @@
 
 class orderItem:
 
-    def __init__(self, cursor, cartid, invid):
+    def __init__(self, cursor, cartid, invid, amt):
         cursor.execute("SELECT orderitemid FROM orderitem ORDER BY orderitemid DESC")
-        highestid = cursor.fetchone()
-
-        self.ID = highestid[0] + 1
+        try:
+            highestid = cursor.fetchone()
+            self.ID = highestid[0] + 1
+        except:
+            self.ID = 1
         self.cartID = cartid
         self.invID = invid
-        self.amt = int(input("How many copies would you like? "))
+        self.amt = amt
 
     def updateamt(self, cursor):
         self.amt = int(input("How many copies would you like? "))
