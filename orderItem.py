@@ -1,4 +1,3 @@
-
 class orderItem:
 
     def __init__(self, cursor, cartid, invid, amt):
