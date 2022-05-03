@@ -165,6 +165,8 @@ class User:
             self.shippingAddr = ""
             self.billingAddr = ""
             self.cardNum = ""
+            cursor.execute("DELETE FROM orderitem WHERE cartid IN (SELECT cartid FROM cart WHERE userid = " + str(self.userID) + ");")
+            cursor.execute("DELETE FROM cart WHERE userid =" +self.userID)
             cursor.execute("DELETE FROM gamestoreuser WHERE userid =" +self.userID)
             self.userID = ""
         elif del_choice == "no":

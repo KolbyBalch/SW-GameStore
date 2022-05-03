@@ -44,8 +44,9 @@ def employeeMenu(cursor):
                     currentgame.DeleteGame(cur)
             case _ : # Default
                 print ("Selection not recognized. \n")
+        conn.commit()
 
-def main(cur):
+def main(cur, conn):
     loginFlag = False
     while(True):
         while(loginFlag == False):
@@ -56,16 +57,19 @@ def main(cur):
                 if(currentUser == False):
                     doNothing()
                 else:
+                    currentCart = c.getCart(cur, currentUser.userID)
                     loginFlag = True
 
             elif (logreg == "Register" or logreg == "register"):
                 currentUser = u.User()
                 currentUser.register(cur)
+                currentCart = c.getCart(cur, currentUser.userID)
                 loginFlag = True
 
             elif (logreg == "exit" or logreg == "Exit"):
                 print("Goodbye!")
                 return 0
+            conn.commit()
 
         print("Available Selections: \n\n0. Logout\n1. See Products \n2. See Current Cart \n3. See Past Orders \n4. Manage Account \n")
         if (currentUser.employee == True):
@@ -77,9 +81,9 @@ def main(cur):
                 currentUser = ""
                 loginFlag = False
             case "1": #See All Products
-                i.printAll(1, cur)
+                i.printAll(currentCart.cartid, cur, conn)
             case "2": #See Current Cart
-                c.findItemsinCart(currentUser, cur)
+                currentCart.findItemsinCart(cur)
                 
                 cartFlag = True
                 while(cartFlag == True):
@@ -89,16 +93,18 @@ def main(cur):
                         case "0": #Go Back
                             cartFlag = False
                         case "1": #Checkout
-                            doNothing()
+                            currentCart.checkout(cur, conn)
+                            currentCart = c.getCart(cur, currentUser.userID)
                         case "2": #Remove Item
-                            doNothing()
+                            currentCart.removeItem(cur)
                         case "3": #Empty Cart
-                            doNothing()
+                            currentCart.clearCart(cur)
                         case _ :  #Not Recognized
                             print("Selection not Recognized.")
+                    conn.commit()
 
             case "3": #See Past Orders
-                doNothing()
+                c.seePastOrders(cur, currentUser.userID)
             case "4": #Manage Account
                 accFlag = True
                 while(accFlag):
@@ -127,8 +133,9 @@ def main(cur):
             case _ : #Not Recognized
                 print("Selection not Recognized.")
 
+        conn.commit()
 
-main(cur)
+main(cur, conn)
 
 conn.commit()
 cur.close()

@@ -1,6 +1,6 @@
 import orderItem as o
 
-def printAll(currentcartid, cursor):
+def printAll(currentcartid, cursor, conn):
     cursor.execute("SELECT * FROM inventory")
     allrows = cursor.fetchall()
     print("\nGames in our inventory: ")
@@ -18,12 +18,15 @@ def printAll(currentcartid, cursor):
                 while(True):
                     try:
                         gamechoice = int(input("Please input the game id here ('0' to go back): "))
-                        amtchoice = int(input("And how many copies: "))
+                        #amtchoice = int(input("And how many copies: "))
+                        amtchoice = 1
                         cursor.execute("SELECT stock FROM inventory WHERE invid = " + str(gamechoice))
                         selectedgameAMT = cursor.fetchone()
                         if (gamechoice == 0):
                             return 0
-                        if (amtchoice <= selectedgameAMT[0]):
+                        elif selectedgameAMT[0] > 0:
+                            break
+                        elif (amtchoice <= selectedgameAMT[0]):
                             break
                         else:
                             print("I'm sorry, we don't seem to have enough copies for you. \nPlease make another selection. \n")
@@ -37,6 +40,7 @@ def printAll(currentcartid, cursor):
                     cursor.execute("INSERT INTO orderitem (orderitemid, cartid, invid, amt) VALUES (" + str(newItem.ID) + ", " + str(newItem.cartID) + ", " + str(newItem.invID) + ", "  + str(newItem.amt) + ");")
                 else:
                     print ("It looks like that selection is already in your cart.")
+        conn.commit()
 
 def getExistingInv(cursor):
     cursor.execute("SELECT * FROM inventory;")
