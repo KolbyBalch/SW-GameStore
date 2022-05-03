@@ -10,6 +10,7 @@ def userLogin(cursor):
             print("login successful")
             return currentUser
         else:
+            print("Username or Password not recognized.")
             return False
     except:
         print("Username or Password not recognized. Are you registered with us? ")
@@ -47,7 +48,7 @@ class User:
         usernameNotAvailable = True
 
         while(usernameNotAvailable):
-            register_username = input("Please enter a username.")
+            register_username = input("Please enter a username: ")
             cursor.execute("SELECT * FROM gamestoreuser WHERE username = '" + register_username + "';")
             if(cursor.fetchone() != None):
                 print("Username not available.")
@@ -56,15 +57,15 @@ class User:
                 usernameNotAvailable = False
 
         print(" ")
-        register_password = input("Please enter a password.")
+        register_password = input("Please enter a password: ")
         print(" ")
-        register_name = input("Please enter your name.")
+        register_name = input("Please enter your name: ")
         print(" ")
-        register_shippingAddr = input("Please enter a shipping address.")
+        register_shippingAddr = input("Please enter a shipping address: ")
         print(" ")
-        register_billingAddr = input("Please enter a billing address.")
+        register_billingAddr = input("Please enter a billing address: ")
         print(" ")
-        register_cardNum = input("Please enter your card number.")
+        register_cardNum = input("Please enter your card number: ")
         print(" ")
         # employee_choice = input("Are you an established employee? Enter 1 if so, 2 if not.")
         # if employee_choice == 1:
@@ -84,7 +85,6 @@ class User:
         self.cardNum = register_cardNum
 
         values = "(" + str(self.userID) + ", '" + self.username + "', '" + self.password + "', False, '" + self.name + "', '" + self.shippingAddr + "', '" + self.billingAddr + "', " + self.cardNum + ");"
-        print(values)
         cursor.execute("INSERT INTO gamestoreuser (userid, username, pass, employeetag, realname, shippingaddr, billingadr, cardnum) VALUES " + values)
         # self.employee = register_employee
 
@@ -119,7 +119,7 @@ class User:
         self.password = input("Please enter a new password: ")
 
         print("Your new password is: " + self.password)
-        cursor.execute("UPDATE gamestoreuser SET pass = '" + self.password + "';")
+        cursor.execute("UPDATE gamestoreuser SET pass = '" + self.password + "' WHERE userid = " + str(self.userID) + ";")
 
 
 
@@ -128,20 +128,20 @@ class User:
         print("Enter 2 if you would like to update your billing address.")
         print("Enter 3 if you would like to update both.")
 
-        choice = input("Please enter your selection:")
+        choice = int(input("Please enter your selection: "))
 
         if choice == 1:
             self.shippingAddr = input("Please enter a new shipping address: ")
-            cursor.execute("UPDATE gamestoreuser SET shippingaddr = '" + self.shippingAddr + "';")
+            cursor.execute("UPDATE gamestoreuser SET shippingaddr = '" + self.shippingAddr + "' WHERE userid = " + str(self.userID) + ";")
         elif choice == 2:
             self.billingAddr = input("Please enter a new billing address: ")
-            cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "';")
+            cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "' WHERE userid = " + str(self.userID) + ";")
         elif choice == 3:
             self.shippingAddr = input("Please enter a new shipping address: ")
-            cursor.execute("UPDATE gamestoreuser SET shippingaddr = '" + self.shippingAddr + "';")
+            cursor.execute("UPDATE gamestoreuser SET shippingaddr = '" + self.shippingAddr + "' WHERE userid = " + str(self.userID) + ";")
             print("\n")
             self.billingAddr = input("Please enter a new billing address: ")
-            cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "';")
+            cursor.execute("UPDATE gamestoreuser SET billingadr = '" + self.billingAddr + "' WHERE userid = " + str(self.userID) + ";")
         else:
             print("That is not a valid option, please try again.")
             self.updateAddr()
@@ -152,7 +152,7 @@ class User:
         except:
             print("Something went wrong. Make sure that you are inputting only numbers.")
             
-        cursor.execute("UPDATE gamestoreuser SET cardnum = " + self.cardNum + ";")
+        cursor.execute("UPDATE gamestoreuser SET cardnum = " + str(self.cardNum) + " WHERE userid = " + str(self.userID) + ";")
 
     def deleteUser(self, cursor):
         print("Are you sure you want to delete your account?")

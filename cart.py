@@ -25,10 +25,10 @@ def seePastOrders(cursor, userid):
         return 0
     else:
         while(pastorder != None):
-            print("CartID: " + str(pastorder[0]) + " | Total: $" + str(pastorder[2]) + ";")
+            print("CartID: " + str(pastorder[0]) + " | Total: $" + str("%.2f" % pastorder[2]) + ";")
             pastorder = cursor.fetchone()
     while(True):
-        print("Would you like to see more details about an order? ")
+        print("\nWould you like to see more details about an order? ")
         choice = input("0. Go Back \n1. See Details of Order \nPlease make a Selection: ")
         match choice:
             case "0":
@@ -68,13 +68,13 @@ class cart:
         print("ID : Game Title : Price")
 
         while (entry != None):
-            print(str(entry[0]) + " : " + str(entry[1]) + " : " + str(entry[2]))
+            print(str(entry[0]) + " : " + str(entry[1]) + " : $" + str("%.2f" % entry[2]))
             newsubtotal += entry[2]
             entry = cursor.fetchone()
         
         self.subtotal = newsubtotal
-        print("\nTotal: " + str(self.subtotal))
-        cursor.execute("UPDATE cart SET subtotal = " + str(self.subtotal) + ";")
+        print("\nTotal: $" + str("%.2f" % self.subtotal))
+        cursor.execute("UPDATE cart SET subtotal = " + str(self.subtotal) + " WHERE cartid = " + str(self.cartid) + ";")
 
     def getTotal(self, cursor):
         newsubtotal = 0
@@ -87,7 +87,7 @@ class cart:
             entry = cursor.fetchone()
         
         self.subtotal = newsubtotal
-        cursor.execute("UPDATE cart SET subtotal = " + str(self.subtotal) + ";")
+        cursor.execute("UPDATE cart SET subtotal = " + str(self.subtotal) + " WHERE cartid = " + str(self.cartid) + ";")
 
     def removeItem(self, cursor):
         self.findItemsinCart(cursor)

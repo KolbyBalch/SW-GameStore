@@ -1,11 +1,12 @@
 import orderItem as o
 
 def printAll(currentcartid, cursor, conn):
-    cursor.execute("SELECT * FROM inventory")
-    allrows = cursor.fetchall()
+    cursor.execute("SELECT * FROM inventory ORDER BY invid ASC;")
+    row = cursor.fetchone()
     print("\nGames in our inventory: ")
-    for row in allrows:
+    while row != None:
         print("Game id: " + str(row[0]) + ": " + str(row[3]) + " : $" + str(row[2]) + " : " + str(row[1]) + " in stock.")
+        row = cursor.fetchone()
 
     while(True):
         print("\nSee something you like? \n0. Go Back \n1. Add a game to your cart")
@@ -43,7 +44,7 @@ def printAll(currentcartid, cursor, conn):
         conn.commit()
 
 def getExistingInv(cursor):
-    cursor.execute("SELECT * FROM inventory;")
+    cursor.execute("SELECT * FROM inventory ORDER BY invid ASC;")
     allrows = cursor.fetchall()
     for row in allrows:
         print("GameID : " + str(row[0]) + " : Game Name : " + str(row[3]) + " : Price : " + str(row[2]) + " : # in Stock : " + str(row[1]))
@@ -102,10 +103,10 @@ class Inventory:
         cursor.execute("INSERT INTO inventory (invid, gamename, stock, price) VALUES " + values)
 
     def changeprice(self, cursor):
-        self.price = input("Enter a new price for " + self.name + ": ")
+        self.price = float(input("Enter a new price for " + self.name + ": "))
 
-        print("The new price is: " + self.price)
-        cursor.execute("UPDATE inventory SET price = " + self.price + ";")
+        print("The new price is: " + str(self.price))
+        cursor.execute("UPDATE inventory SET price = " + str(self.price) + " WHERE invid = " + str(self.gameID) + ";")
     
     def changename(self, cursor):
         NameTaken = True
@@ -122,28 +123,28 @@ class Inventory:
                 NameTaken = False
 
         print("The new name is: " + self.name)
-        cursor.execute("UPDATE inventory SET invid = '" + str(self.name) + "';")
+        cursor.execute("UPDATE inventory SET gamename = '" + str(self.name) + "' WHERE invid = " + str(self.gameID) + ";")
 
 
     def changeamount(self, cursor):
-        self.amount = input("Enter a new amount for " + self.name + ": ")
+        self.amount = input("Enter a new amount for " + str(self.name) + ": ")
 
         print("The new stock is: " + self.amount)
-        cursor.execute("UPDATE inventory SET stock = " + self.amount + ";")
+        cursor.execute("UPDATE inventory SET stock = " + str(self.amount) + " WHERE invid = " + str(self.gameID) + ";")
 
     def DeleteGame(self, cursor):
 
         print("Are you sure you want to delete this game?")
         choice = input("Enter yes or no: ")
 
-        if choice == "yes" or "Yes" or "y" or "Y":
+        if choice == ("yes" or "Yes" or "y" or "Y"):
             self.name = ""
             self.price = 0
             self.amount = 0
             cursor.execute("DELETE FROM inventory WHERE invid = " + str(self.gameID) + ";")
             self.gameID = ""
-        elif choice == "No" or "no" or "NO" or "n" or "N":
+        elif choice == ("No" or "no" or "NO" or "n" or "N"):
             print("This game lives another day . . .")
         else:
             print("Thats not a valid choice, try again.")
-            self.DeleteGame()
+            self.DeleteGame(cursor)
